@@ -1,0 +1,350 @@
+%=================================================================
+% Courtesy of Zachary Friggstad and Mohammad R. Salavatipour, 
+% University of Alberta, Edmonton. This template is adjusted from 
+% the LaTeX template for the course "CMPUT 675: Approximation Algorithms" 
+% taught at the Computer Science department of UofA by Mohammad R.
+% Salavatipour and Zachary Friggstad.
+%=================================================================
+
+%\documentstyle[10pt,twoside]{article}
+%\documentstyle[twoside]{article}
+\documentclass[twoside]{article}
+\setlength{\oddsidemargin}{0 in}
+\setlength{\evensidemargin}{0 in}
+\setlength{\topmargin}{-0.6 in}
+\setlength{\textwidth}{6.7 in}
+\setlength{\textheight}{8.5 in}
+\setlength{\headsep}{0.75 in}
+\setlength{\parindent}{0 in}
+\setlength{\parskip}{0.1 in}
+\usepackage{amsmath,amssymb,enumerate,algorithm,ifthen,algorithmic,graphicx}
+
+% The following commands sets up the lecnum (lecture number)
+% counter and make various numbering schemes work relative
+% to the lecture number. Don't edit them!
+%
+\newcounter{lecnum}
+\renewcommand{\thepage}{\thelecnum-\arabic{page}}
+\renewcommand{\thesection}{\thelecnum.\arabic{section}}
+\renewcommand{\theequation}{\thelecnum.\arabic{equation}}
+\renewcommand{\thefigure}{\thelecnum.\arabic{figure}}
+\renewcommand{\thetable}{\thelecnum.\arabic{table}}
+
+\newtheorem{theorem}{Theorem} 
+\newtheorem{lemma}{Lemma} 
+\newtheorem{claim}{Claim} 
+\newtheorem{proposition}{Proposition} 
+\newtheorem{prob}{Problem} 
+\newtheorem{corollary}{Corollary} 
+\newtheorem{question}{Question} 
+\newtheorem{conjecture}{Conjecture} 
+\newtheorem{example}{Example} 
+\newtheorem{definition}{Definition} 
+\newtheorem{remarka}{Remark} 
+
+\def\P{\mathop{\rm P}\nolimits}
+\def\NP{\mathop{\rm NP}\nolimits}
+\def\DTIME{\mathop{\rm DTIME}\nolimits}
+\def\BPTIME{\mathop{\rm BPTIME}\nolimits}
+\def\ZPTIME{\mathop{\rm ZPTIME}\nolimits}
+\def\polylog{\mathop{\rm polylog}\nolimits}
+
+\newenvironment{remark}{\begin{remarka}\rm}{\end{remarka}} 
+\newenvironment{proof}{{\bf Proof.}}{\hfill\rule{2mm}{2mm}} 
+\newenvironment{pproof}[1]{\noindent{\textbf{Proof of #1.}}}{\hfill\rule{2mm}{2mm}} 
+\newcommand{\calI}{{\cal I}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calP}{{\cal P}}
+\newcommand{\opt}{\mbox{\sc opt}}
+\newcommand{\OPT}{\mbox{\sc OPT}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\ZZ}{\mathbb{Z}}
+
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\renewcommand{\Pr}[1]{\ensuremath{Pr\left[#1\right]}}
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}\left(#1\right)}}
+\newcommand{\bigTheta}[1]{\ensuremath{\Theta\left(#1\right)}}
+\newcommand{\bigOmega}[1]{\ensuremath{\Omega\left(#1\right)}}
+
+
+%
+% The following macro is used to generate the header.
+%
+\newcommand{\lecture}[5]{
+   \pagestyle{myheadings}
+   \thispagestyle{plain}
+   \newpage
+   \setcounter{lecnum}{#1}
+   \setcounter{page}{1}
+   \noindent
+   \begin{center}
+   \framebox{
+      \vbox{\vspace{2mm}
+    \hbox to 6.28in { {\bf CS-E400204: Approximation Algorithms
+                        \hfill Spring (Fifth Period) 2022} }
+       \vspace{4mm}
+       \hbox to 6.28in { {\Large \hfill Lecture #1 (#2): #3 \hfill} }
+       \vspace{2mm}
+       \hbox to 6.28in { {\it Lecturer: #4 \hfill Scribe: #5} }
+      \vspace{2mm}}
+   }
+   \end{center}
+   \markboth{Lecture #1: #3}{Lecture #1: #3}
+   \vspace*{4mm}
+}
+
+%
+% Convention for citations is authors' initials followed by the year.
+% For example, to cite a paper by Leighton and Maggs you would type
+% \cite{LM89}, and to cite a paper by Strassen you would type \cite{S69}.
+% (To avoid bibliography problems, for now we redefine the \cite command.)
+%
+\renewcommand{\cite}[1]{[#1]}
+
+\input{epsf}
+
+%Use this command for a figure; it puts a figure in wherever you want it.
+%usage: \fig{NUMBER}{FIGURE-SIZE}{CAPTION}{FILENAME}
+\newcommand{\fig}[4]{
+			\vspace{0.2 in}
+			\setlength{\epsfxsize}{#2}
+			\centerline{\epsfbox{#4}}
+			\begin{center}
+			Figure \thelecnum.#1:~#3
+			\end{center}
+	}
+
+% Use these for theorems, lemmas, proofs, etc.
+
+% Some useful equation alignment commands, borrowed from TeX
+\makeatletter
+\def\eqalign#1{\,\vcenter{\openup\jot\m@th
+  \ialign{\strut\hfil$\displaystyle{##}$&$\displaystyle{{}##}$\hfil
+      \crcr#1\crcr}}\,}
+\def\eqalignno#1{\displ@y \tabskip\@centering
+  \halign to\displaywidth{\hfil$\displaystyle{##}$\tabskip\z@skip
+    &$\displaystyle{{}##}$\hfil\tabskip\@centering
+    &\llap{$##$}\tabskip\z@skip\crcr
+    #1\crcr}}
+\def\leqalignno#1{\displ@y \tabskip\@centering
+  \halign to\displaywidth{\hfil$\displaystyle{##}$\tabskip\z@skip
+    &$\displaystyle{{}##}$\hfil\tabskip\@centering
+    &\kern-\displaywidth\rlap{$##$}\tabskip\displaywidth\crcr
+    #1\crcr}}
+\makeatother
+
+% **** IF YOU WANT TO DEFINE ADDITIONAL MACROS FOR YOURSELF, PUT THEM HERE:
+
+% NOW START EDITING
+\begin{document}
+%FILL IN THE RIGHT INFO.
+%\lecture{**LECTURE-NUMBER**}{**DATE**}{**LECTURER**}{**SCRIBE**}
+\lecture{1}{April 20}{Introduction and \textsc{Vertex Cover}}{Kamyar Khodamoradi}{Kamyar Khodamoradi}
+
+% **** YOUR NOTES GO HERE:
+
+
+\section{Introduction}
+
+Many optimization problems are $\NP$-hard. Therefore, one cannot find optimal solutions to such problems efficiently unless $\NP = \P$.  In this course we will be studying the design approximation algorithms for such problems. 
+
+Recall that P is the class of problems solvable in polynomial time. On the other hand, $\NP$ is, roughly speaking, the class  of \emph{decision} problems whose solutions can be verified by a polynomial time algorithm. Finally, $\NP$-hard informally refers to the class of problems that are ``at least as hard as the hardest problem in $\NP$''. For these problems, we would like to:
+\begin{enumerate}
+    \item[(1)] find the optimal solution
+    \item[(2)] find it efficiently (by that, we mean in polynomial time)
+    \item[(3)] find it for all instances
+\end{enumerate}
+
+Unfortunately, all three are not possible simultaneously under the widely believed assumption that $\NP \neq \P$. This means that we have to make a compromise:
+
+\begin{itemize}
+    \item If we relax (3), usually it means we are studying special instances of the problem, or dealing with a special type of randomized algorithms.
+    \item If we relax (2), we are in the field of exact algorithms (which can take exponential time). For example, this is common in the field of Integer Programming via using Branch and Bound methods.
+    \item If we relax (1), we are in the realm of approximation algorithms and heuristics.
+\end{itemize}
+
+In this course, we relax (1) to some extent. That is,
+\begin{itemize}
+    \item We seek (near) optimal solutions to hard optimization problems
+    \item We still prove a guarantee on the \emph{approximation factor} of our solutions, i.e., the ratio between the value of the objective function of our solution to the value of the objective function of the best possible solution.
+    \item We find such solutions using efficient algorithms.
+\end{itemize}
+
+\begin{example}[\textsc{Vertex Cover} Problem] 
+\label{eg:VC}\,
+\begin{itemize}
+    \item Input:
+    \begin{itemize}
+        \item a graph $G = (V, E)$
+        \item a cost function $c: V \rightarrow \mathbb{Q}_{\geq 0}$
+    \end{itemize}
+    \item Output:
+    \begin{itemize}
+        \item A minimum \emph{vertex cover}: a subset of vertices $V' \subseteq V$ of the minimum total cost\footnote{The cost function $c$ is \emph{additive} or \emph{modular}, meaning that $c(V') = \sum_{v \in V'} c(v)$ for all $V' \subseteq V$.} such that every edge is \emph{covered} by $V'$. We say that an edge is covered by $V'$ if at least one end-point of it is in $V'$.
+    \end{itemize}
+\end{itemize}
+A special case of the problem is the \textsc{Cardinality Vertex Cover} for which $c(v) = 1$ for all vertices $v \in V$.
+\end{example}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=9cm]{Figures/VC-example.pdf}
+    \caption{Example graph and a vertex cover of size 4}
+    \label{fig:my_label}
+\end{figure}
+
+\section{$\NP$ Optimization Problems}
+Let $\Pi$ indicate a minimization (maximization) problem. $\Pi$ is characterized by:
+\begin{itemize}
+    \item A set $D_\Pi$ of \emph{instances}. For every $I \in D_\Pi$, let $\abs{I}$ be the size of $I$, which is the number of bits in binary needed to represent $I$.
+    \item For each instance $I \in D_\Pi$, a set $S_\Pi(I) \neq \varnothing$ of \emph{feasible solutions} to $I$ such that:
+    \begin{itemize}
+        \item for each solution $s \in S_\Pi(I)$, it size $\abs{s}$ is polynomial in $\abs{I}$, and
+        \item for each pair $(I, s)$, there is a polynomial algorithm to decide whether $s \in S_\Pi(I)$.
+    \end{itemize}
+    \item a polynomial-time computable \emph{objective function} $obj_\Pi(I, s)$ that assigns a non-negative rational value to each feasible solution $s \in S_\Pi(I)$ for $I$.
+    \item $\Pi$ is either a minimization or maximization problem.
+\end{itemize}
+
+Back to our Example \ref{eg:VC}, for $\Pi =$ \textsc{Cardinality Vertex Cover} we have:
+\begin{itemize}
+    \item $D_\Pi =$ the set of all graphs
+    \item $I \in D_\Pi$ would be a graph $G(V, E)$
+    \begin{itemize}
+        \item What is the size of an instance $\abs{I}$?
+    \end{itemize}
+    \item $S_\Pi(I) =$ the set of all vertex covers of the instance $I = G(V, E)$
+    \begin{itemize}
+        \item Why is $\abs{s}$ polynomial in $\abs{I}$?
+        \item How to detect, in polynomial time, that $s \in S_\Pi(I)$?
+    \end{itemize}
+    \item $obj_\Pi(I, s) = \abs{s}$
+    \item $\Pi$ is a minimization problem.
+\end{itemize}
+
+When dealing with optimization problems, we either want to minimize or maximize $obj_\Pi(I)$. In any case, we usually call the best solution for an instance $I$ the \emph{optimum} solution and denote by $\OPT_\Pi(I)$ (or simply $\OPT$ when $\Pi$ and $I$ are clear from the context).
+
+\section{Approximation Algorithms}
+
+An \emph{$\alpha$-factor approximation algorithm} (or simply, and $\alpha$-approximation) is a polynomial time algorithm whose solution is always within a factor $\alpha$ of \OPT.
+
+\begin{definition}
+For a minimization problem $\Pi$, we say that algorithm A has approximation factor $\alpha$ if it runs in polynomial time and for any instance $I \in D_\Pi$, it produces a solution $s \in S_\Pi(I)$ such that $\dfrac{obj_\Pi(I, s)}{\OPT(I)} \leq \alpha(\abs{I})$. $\alpha$ can be a constant or a function of the size of the instance.
+\end{definition}
+
+\begin{remark}
+The convention is that for minimization problems, $\alpha(I) \geq 1$ and for maximization, $\alpha(I) \leq 1$. Therefore, for a maximization problem, the only difference is that we require $\dfrac{obj_\Pi(I, s)}{\OPT(I)} \geq \alpha(\abs{I})$ instead.
+\end{remark}
+
+Just as there are randomized algorithms that compute exact solutions, there are randomized algorithms that compute approximate solutions.
+
+\begin{definition} An algorithm A is a randomized factor $\alpha$-approximation for problem $\Pi$ if for any instance $I \in D_\Pi$, A produces a feasible solution $s \in S_\Pi(I)$ such that $\Pr{obj_\Pi(I, s) \leq \alpha(|I|) \cdot \OPT} \geq 1/2$.
+\end{definition}
+
+This probability can be increased to $(1 - 1/2^x)$ by repeating the same algorithm A for $x$ times.
+
+\section{A $2$-approximation for \textsc{Cardinality Vertex Cover}}
+
+First attempt:
+
+\begin{algorithm}[H]
+\caption{An edge-greedy approximation for \textsc{Cardinality Vertex Cover}}
+{\bf Input}: Graph $G = (V, E)$ \\
+{\bf Output}: A set $S \subseteq V$
+\begin{algorithmic}\label{alg:edge_vc}
+\STATE{$S \leftarrow \varnothing$}
+\WHILE{$E \neq \varnothing$}
+\STATE{let $e = (u, v)$ be an edge in $E$}
+\STATE{$S \leftarrow S \cup \{u\}$}
+\STATE{remove $u$ and all its incident edges from $G$}
+\ENDWHILE
+\RETURN{S}
+\end{algorithmic}
+\end{algorithm}
+
+What is the approximation factor of this algorithm?
+
+Second attempt:
+
+\begin{algorithm}[H]
+\caption{A degree-greedy approximation for \textsc{Cardinality Vertex Cover}}
+{\bf Input}: Graph $G = (V, E)$ \\
+{\bf Output}: A set $S \subseteq V$
+\begin{algorithmic}\label{alg:deg_vc}
+\STATE{$S \leftarrow \varnothing$}
+\WHILE{$E \neq \varnothing$}
+\STATE{$v \leftarrow$ vertex with the maximum degree in $G$}
+\STATE{$S \leftarrow S \cup \{v\}$}
+\STATE{remove $v$ and all its incident edges from $G$}
+\ENDWHILE
+\RETURN{S}
+\end{algorithmic}
+\end{algorithm}
+
+Can this algorithm achieve a constant factor approximation?
+
+Final attempt:
+
+One main challenge in analyzing the approximation ratio, or $\dfrac{obj_\Pi(I, s)}{\OPT}$ is that $\OPT$ is unknown. The main idea is to find a ``close-enough'' lower bound $L$ on $\OPT$. Since $\dfrac{obj_\Pi(I, s)}{\OPT} \leq \dfrac{obj_\Pi(I, s)}{L}$, this lower bound can give us the approximation factor $\alpha$.
+
+\subsection{Lower Bounding Vertex Cover via Maximal Matching}
+
+Our main observation in this section is that for \textsc{Cardinality Vertex Cover}, the size of any (maximal) matching provides a lower bound on \OPT.
+
+\begin{definition}
+An edge set $M \subseteq E$ of a graph $G = (V, E)$ is a \emph{matching} if no two edges of $M$ are incident. A matching $M$ is called a \emph{maximal matching} if there is no matching $M'$ such that $M' \supsetneq M$.
+\end{definition}
+
+\begin{algorithm}[H]
+\caption{A  2-approximation for \textsc{Cardinality Vertex Cover} via maximal matching}
+{\bf Input}: Graph $G = (V, E)$ \\
+{\bf Output}: A set $S \subseteq V$
+\begin{algorithmic}\label{alg:matching_vc}
+\STATE{$S \leftarrow \varnothing$}
+\WHILE{$E \neq \varnothing$}
+\STATE{let $e = (u, v)$ be an edge in $E$}
+\STATE{$S \leftarrow S \cup \{u, v\}$}
+\STATE{remove $u$, $v$, and all their incident edges from $G$}
+\ENDWHILE
+\RETURN{S}
+\end{algorithmic}
+\end{algorithm}
+
+First, notice that the algorithm returns a feasible solution.
+
+\begin{lemma}
+The set $S$ returned by Algorithm \ref{alg:matching_vc} is a vertex cover.
+\end{lemma}
+
+\begin{proof}
+Every edge $e \in E$ is deleted only after at least one of its endpoints is added to $S$. So, every edge is covered by $S$ in the end.
+\end{proof}
+
+Then, we formalize our observation about maximal matching and its relation to the approximation factor via the following two lemmas.
+
+\begin{lemma}
+\label{lem:matching}
+Let $M$ be any matching and $S$ be any vertex cover. Then, $\abs{M} \leq \abs{S}$.
+\end{lemma}
+\begin{proof}
+Every edge $e \in M$ must have at least one of its endpoints in $S$ in order to be covered. Since $M$ is a matching, no two edges in $M$ share an endpoint. Therefore, an edge $e \in M$ is covered by a vertex of $S$ that covers no other edge $e' \in M$. So, $\abs{S} \geq \abs{M}$.
+\end{proof}
+
+\begin{lemma}
+Algorithm \ref{alg:matching_vc} is a 2-approximation.
+\end{lemma}
+
+\begin{proof}
+Let $M$ be the set of all edges that the algorithm considers in the first line of the {\bf while} loop. These edges form a matching since all other edges incident to their endpoints are deleted in the third line of the {\bf while} loop. As the set $S$ is only made up of the endpoints of $M$, then $\abs{S} = 2\abs{M}$. Let $\OPT$ be the size of the smallest vertex cover. By Lemma \ref{lem:matching}, $\abs{M} \leq \OPT$. Putting everything together, we get $\abs{S} = 2 \abs{M} \leq 2 \OPT$. 
+\end{proof}
+
+Some final remarks about the \textsc{Vertex Cover} problem:
+\begin{itemize}
+    \item Its best known approximation factor is $2 - \bigTheta{1 / \sqrt{\log \abs{V}}}$ [Karakostas, 04].
+    \item Assuming $\NP \neq \P$, it cannot be approximated better than $10 \sqrt{5} - 21 > 1.3606$ in polynomial time [Dinur and Safra, 02].
+    \item Under an additional complexity assumption known as the \emph{Unique Game Conjecture}, it cannot be efficiently approximated within factor $2 - \varepsilon$ for any constant $\varepsilon > 0$ [Khot and Regev, 03].
+\end{itemize}
+
+
+\end{document}
